@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life-Line Air - Autonomous Medical Drone Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <h1>Life-Line Air</h1>
+                <span class="tagline">Autonomous Medical Drone System</span>
+            </div>
+        </div>
+        <div class="header-center">
+            <div class="mission-status">
+                <span class="status-indicator" id="missionStatusIndicator">READY</span>
+                <div class="mission-timer" id="missionTimer">00:00:00</div>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="system-time" id="systemTime"></div>
+            <div class="connection-status">
+                <span class="status-dot active"></span>
+                <span>Connected</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Left Sidebar - Mission Control -->
+        <aside class="sidebar-left">
+            <div class="control-panel">
+                <h3>Mission Control</h3>
+                
+                <!-- Mission Selection -->
+                <div class="control-section">
+                    <h4>Mission Selection</h4>
+                    <select class="form-control" id="missionSelect">
+                        <option value="">Select Mission Scenario</option>
+                    </select>
+                    <div class="mission-details" id="missionDetails"></div>
+                </div>
+
+                <!-- Pre-flight Checklist -->
+                <div class="control-section">
+                    <h4>Pre-flight Checklist</h4>
+                    <div class="checklist">
+                        <div class="checklist-item">
+                            <span class="status-icon" id="gpsStatus">●</span>
+                            <span>GPS System</span>
+                        </div>
+                        <div class="checklist-item">
+                            <span class="status-icon" id="commStatus">●</span>
+                            <span>Communications</span>
+                        </div>
+                        <div class="checklist-item">
+                            <span class="status-icon" id="payloadStatus">●</span>
+                            <span>Payload Bay</span>
+                        </div>
+                        <div class="checklist-item">
+                            <span class="status-icon" id="batteryStatus">●</span>
+                            <span>Battery System</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mission Controls -->
+                <div class="control-section">
+                    <h4>Flight Controls</h4>
+                    <div class="control-buttons">
+                        <button class="btn btn--primary btn--full-width" id="takeoffBtn">
+                            🚁 Initiate Takeoff
+                        </button>
+                        <button class="btn btn--secondary btn--full-width" id="pauseBtn" disabled>
+                            ⏸️ Pause Mission
+                        </button>
+                        <button class="btn btn--outline btn--full-width" id="emergencyBtn">
+                            🚨 Emergency Landing
+                        </button>
+                        <button class="btn btn--secondary btn--full-width" id="rthBtn" disabled>
+                            🏠 Return to Home
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Payload Controls -->
+                <div class="control-section">
+                    <h4>Payload Management</h4>
+                    <div class="payload-info">
+                        <div class="info-row">
+                            <span>Weight:</span>
+                            <span id="payloadWeight">0.0 kg</span>
+                        </div>
+                        <div class="info-row">
+                            <span>Temperature:</span>
+                            <span id="payloadTemp">4.2°C</span>
+                        </div>
+                    </div>
+                    <button class="btn btn--secondary btn--full-width" id="dropPayloadBtn" disabled>
+                        📦 Deploy Payload
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center Panel - Simulation and Telemetry -->
+        <main class="center-panel">
+            <!-- 3D Simulation View -->
+            <div class="simulation-container">
+                <div class="simulation-header">
+                    <h3>3D Flight Simulation</h3>
+                    <div class="simulation-controls">
+                        <button class="btn btn--sm" id="zoomInBtn">🔍+</button>
+                        <button class="btn btn--sm" id="zoomOutBtn">🔍-</button>
+                        <button class="btn btn--sm" id="resetViewBtn">🎯</button>
+                    </div>
+                </div>
+                <div class="simulation-view" id="simulationView">
+                    <div class="terrain-map">
+                        <div class="drone-icon" id="droneIcon">🚁</div>
+                        <div class="waypoints" id="waypoints"></div>
+                        <div class="obstacles" id="obstacles"></div>
+                        <div class="target-zone" id="targetZone">🎯</div>
+                    </div>
+                    <div class="simulation-overlay">
+                        <div class="altitude-indicator">
+                            <span>ALT: </span>
+                            <span id="altitude">0m</span>
+                        </div>
+                        <div class="speed-indicator">
+                            <span>SPD: </span>
+                            <span id="speed">0 km/h</span>
+                        </div>
+                        <div class="heading-indicator">
+                            <span>HDG: </span>
+                            <span id="heading">0°</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Telemetry Dashboard -->
+            <div class="telemetry-container">
+                <div class="telemetry-header">
+                    <h3>Real-Time Telemetry</h3>
+                    <div class="telemetry-status">
+                        <span class="status-dot active"></span>
+                        <span>Live Data</span>
+                    </div>
+                </div>
+                <div class="telemetry-grid">
+                    <div class="telemetry-card">
+                        <h4>Battery Status</h4>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="batteryProgress" style="width: 98%"></div>
+                        </div>
+                        <span id="batteryLevel">98%</span>
+                    </div>
+                    <div class="telemetry-card">
+                        <h4>GPS Signal</h4>
+                        <div class="gps-info">
+                            <div>Satellites: <span id="satellites">12</span></div>
+                            <div>Accuracy: <span id="gpsAccuracy">1.2m</span></div>
+                        </div>
+                    </div>
+                    <div class="telemetry-card">
+                        <h4>Communication</h4>
+                        <div class="comm-info">
+                            <div>Signal: <span id="signalStrength">85%</span></div>
+                            <div>Latency: <span id="latency">45ms</span></div>
+                        </div>
+                    </div>
+                    <div class="telemetry-card">
+                        <h4>Sensors</h4>
+                        <div class="sensor-status">
+                            <div>LiDAR: <span class="status success">Active</span></div>
+                            <div>Camera: <span class="status success">Recording</span></div>
+                            <div>Thermal: <span class="status success">Active</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar - AI and Mapping -->
+        <aside class="sidebar-right">
+            <div class="ai-panel">
+                <h3>AI Decision Engine</h3>
+                
+                <!-- Threat Assessment -->
+                <div class="ai-section">
+                    <h4>Threat Assessment</h4>
+                    <div class="threat-level">
+                        <span class="threat-indicator" id="threatLevel">MEDIUM</span>
+                        <div class="threat-factors" id="threatFactors"></div>
+                    </div>
+                </div>
+
+                <!-- Medic-Assist AI -->
+                <div class="ai-section">
+                    <h4>Medic-Assist Recommendations</h4>
+                    <div class="ai-recommendations" id="aiRecommendations"></div>
+                </div>
+
+                <!-- Obstacle Detection -->
+                <div class="ai-section">
+                    <h4>Obstacle Detection</h4>
+                    <div class="obstacle-alerts" id="obstacleAlerts">
+                        <div class="alert-item">No obstacles detected</div>
+                    </div>
+                </div>
+
+                <!-- Live Mapping -->
+                <div class="ai-section">
+                    <h4>Live Mapping</h4>
+                    <div class="mapping-display" id="mappingDisplay">
+                        <div class="mapping-stats">
+                            <div>Area Mapped: <span id="areaMapped">0 km²</span></div>
+                            <div>Points Captured: <span id="pointsCaptured">0</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Weather Status -->
+                <div class="ai-section">
+                    <h4>Weather Conditions</h4>
+                    <div class="weather-info" id="weatherInfo">
+                        <div class="weather-icon" id="weatherIcon">☀️</div>
+                        <div class="weather-details">
+                            <div>Visibility: <span id="visibility">10km</span></div>
+                            <div>Wind Speed: <span id="windSpeed">5 km/h</span></div>
+                            <div>Impact: <span id="weatherImpact">Minimal</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Bottom Panel - Logs and Diagnostics -->
+    <footer class="bottom-panel">
+        <div class="panel-tabs">
+            <button class="tab-btn active" data-tab="logs">Mission Logs</button>
+            <button class="tab-btn" data-tab="diagnostics">System Diagnostics</button>
+            <button class="tab-btn" data-tab="performance">Performance Metrics</button>
+        </div>
+        <div class="panel-content">
+            <div class="tab-content active" id="logs">
+                <div class="log-entries" id="logEntries"></div>
+            </div>
+            <div class="tab-content" id="diagnostics">
+                <div class="diagnostic-grid">
+                    <div class="diagnostic-item">
+                        <span>Mission Success Rate:</span>
+                        <span class="value">95%</span>
+                    </div>
+                    <div class="diagnostic-item">
+                        <span>Average Response Time:</span>
+                        <span class="value">12.3 min</span>
+                    </div>
+                    <div class="diagnostic-item">
+                        <span>Delivery Accuracy:</span>
+                        <span class="value">±2m</span>
+                    </div>
+                    <div class="diagnostic-item">
+                        <span>Battery Efficiency:</span>
+                        <span class="value">87%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-content" id="performance">
+                <div class="performance-charts">
+                    <canvas id="performanceChart" width="600" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal for Mission Reports -->
+    <div class="modal hidden" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Mission Report</h3>
+                <button class="modal-close" id="closeReportModal">×</button>
+            </div>
+            <div class="modal-body" id="reportContent">
+                <!-- Report content will be generated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--secondary" id="exportReport">Export Report</button>
+                <button class="btn btn--primary" id="closeReport">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
